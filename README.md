@@ -2,7 +2,7 @@
 # This is a test readme commit for a project in eeb5300. This repository will store 4 RNAseq datasets to be analyzed for transcripts of G2/Jockey-3 in somatic (brain) and germline (male and female) tissues of Drosophila Melanogaster
 
 # We will be getting our data from the paper, " Re-annotation of eight Drosophila genomes" by Yang et.al. 2018
-# Yang et.al. 2018 extracted RNA from 584 samples from nine different fly lines. RNA was then sequenced using the Illumina HiSeq2000 platform generating approximately 5 billion reads of  average length is 76 bp. We will be using the single-end sequencing data from the male and female gonads/brains of four to 14 day old Drososophila Melanogaster flies. 
+# Yang et.al. 2018 extracted RNA from 584 samples from nine different fly lines. RNA was then sequenced using the Illumina HiSeq2000 platform generating approximately 5 billion reads of  average length is 76 bp. We will be using the single-end sequencing data from the male and female gonads/brains of 4 to 14 day old Drososophila Melanogaster flies. 
 
 # The accession numbers for the data from the Sequencing Read Archive at NCBI are:
 
