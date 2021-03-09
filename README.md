@@ -4,8 +4,6 @@
 # We will be getting our data from the paper, " Re-annotation of eight Drosophila genomes" by Yang et.al. 2018
 # Yang et.al. 2018 extracted RNA from 584 samples from nine different fly lines. RNA was then sequenced using the Illumina HiSeq2000 platform generating approximately 5 billion reads of  average length is 76 bp. We will be using the single-end sequencing data from the male and female gonads/brains of four to 14 day old Drososophila Melanogaster flies. 
 
-# ( IDK how to get coverage for the part we plan to focus on without actually running the data through the Cluster. Coverage = read count*read lenght/Genome size)
-
 # The accession numbers for the data from the Sequencing Read Archive at NCBI are:
 
 # Male brain: GSM2647281 GSM2647282 GSM2647283
