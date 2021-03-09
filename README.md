@@ -17,7 +17,7 @@
 ## 3.  Align reads using HISAT2 and sort/read data using samtools
 ### We will be using an annotated reference genome from the Mellone Lab at UCONN which is an improvement on the current DM6 genome with replicative satellite and transposon sequences. 
 ## 4.  Use htseq-count to determine how many reads map to G2/Jockey-3 in the genome for each sample tissue
-## 5. Visualize data using a MA and volcano plot and prinicipal component analysis (PCA). 
+## 5. Analyze fold changes between samples using R and visualize data using a MA and volcano plot and prinicipal component analysis (PCA). 
 
 
 # Reference: Yang, Haiwang et al. “Re-annotation of eight Drosophila genomes.” Life science alliance vol. 1,6 e201800156. 24 Dec. 2018, doi:10.26508/lsa.201800156
