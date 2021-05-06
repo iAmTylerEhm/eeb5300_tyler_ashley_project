@@ -1,3 +1,11 @@
-``` ivnfd
+Overview and Motivation:Chang et al. 2019 discovered that all centromeres in Drosophila melanogaster are comprised of islands of retrotransposons flanked by simple satellite repeats. Retrotransposons are selfish genetic elements that replicate in the genome by using an RNA intermediate. These elements can disrupt protein-coding sequences and rearrange the genome when replicating (Klein et al. 2018). Though each centromere differed in terms of elements present, G2/Jockey-3 was the only retrotransposon enriched at all the centromeres (Chang et al. 2019). This data begs the question, does G2/Jockey-3 have a role in centromere formation or function? To answer this question, we first need to determine whether G2/Jockey-3 is expressed in the cell.  We will use RNA seq data from the Yang lang to investigate whether G2/Jockey-3 is expressed in male and female brains/gonads.     
 
-```
+Related Work/Citations: If you are using public data, you would want to include relevant descriptions of  how the data was generated and cite this information.  Your analysis should be different from anything published on the data. If you are using data in your lab, ensure this data can be shared with your partner.  A full description of how this data was generated (study design, libraries, sequencing, etc) should be included.
+
+Initial Questions: What questions are you trying to answer? How did these questions evolve over the course of the project? What new questions did you consider in the course of your analysis?
+
+Data: Location, Organization, Source
+
+Workflow/Analysis: What visualizations did you use to look at your data in different ways? What are the different statistical methods you considered? Why did you select the packages you did?
+
+Discussion: What did you learn? What additional sequencing and/or analysis is necessary?  What questions remain?  What new insights were gained?
