@@ -375,7 +375,12 @@ pheatmap(
   annotation_col=df
 )
 ```
-
+![diff_brain](https://user-images.githubusercontent.com/80122814/117384657-7d537d00-aeb1-11eb-86bd-2a3b89d701ee.png)
+![diff_brain_2](https://user-images.githubusercontent.com/80122814/117384671-86444e80-aeb1-11eb-8c1d-e16ec92888f4.png)
+![ma_vol_brain](https://user-images.githubusercontent.com/80122814/117384709-9a884b80-aeb1-11eb-870a-93747eea37e5.png)
+![diff_germ](https://user-images.githubusercontent.com/80122814/117384679-893f3f00-aeb1-11eb-8080-6a18d1d20855.png)
+![diff_germ2](https://user-images.githubusercontent.com/80122814/117384685-8ba19900-aeb1-11eb-9c29-6285f1fa8378.png)
+![ma_vol_germ](https://user-images.githubusercontent.com/80122814/117384725-a247f000-aeb1-11eb-9aa1-7cee91307988.png)
 
 
 Discussion: 
