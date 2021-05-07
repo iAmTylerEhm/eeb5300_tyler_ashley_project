@@ -16,11 +16,12 @@ Align- BAM files generated from aligning RNA seq reads to reference genome
 We adapted code from UCONN’s RNA seq tutorial (https://github.com/CBC-UCONN/RNA-seq-with-reference-genome-and-annotation)
  
 Workflow/Analysis:
-Clone the RNA seq tutorial using the git clone command into the final_project directory
+
+1. Clone the RNA seq tutorial using the git clone command into the final_project directory
 ```
 git clone  https://github.com/CBC-UCONN/RNA-seq-with-reference-genome-and-annotation final_project
 ```
-Upload RNA Seq Data to the cluster using sratoolkit. The script can be found in the raw_data folder
+2. Upload RNA Seq Data to the cluster using sratoolkit. The script can be found in the raw_data folder
 ```
 #SBATCH --job-name=fastq_dump_xanadu
 #SBATCH -n 1
@@ -71,7 +72,7 @@ mv SRR5639583.fastq.gz fmalegerm_SRR5639583.fastq.gz
 
 ```
 
- Quality control using Trimmomatic, the preferred trimming tool for reads sequenced on the Illumina platform.  
+3. Quality control using Trimmomatic, the preferred trimming tool for reads sequenced on the Illumina platform.  
 
 ```
 echo `hostname`
@@ -171,7 +172,7 @@ java -jar $Trimmomatic SE \
         SLIDINGWINDOW:4:20 \
         MINLEN:45
 ```
-Estimation of quality using FASTQC and MULTIQC. FASTQC performs multiple quality checks on the reads, such as sequence duplication level and per base sequence quality, and summarizes the findings in a graph. MULTIQC summarizes the findings of several FASTQC reports for different samples into one file. 
+4. Estimation of quality using FASTQC and MULTIQC. FASTQC performs multiple quality checks on the reads, such as sequence duplication level and per base sequence quality, and summarizes the findings in a graph. MULTIQC summarizes the findings of several FASTQC reports for different samples into one file. 
 
 ```
 
@@ -206,6 +207,185 @@ module load MultiQC/1.8
 
 multiqc --outdir trimmed_multiqc ./after/
 ```
+A few outputs from MultiQC is shown below:
 
 ![fastqc_sequence_counts_plot](https://user-images.githubusercontent.com/80122814/117383612-2482e500-aeaf-11eb-9101-c6999a766c75.png)
 ![fastqc_sequence_duplication_levels_plot (2)](https://user-images.githubusercontent.com/80122814/117383632-32d10100-aeaf-11eb-87e2-2f738d7a4e61.png)
+
+5. Upload reference Dmel_scaffold_plus0222.fasta  to cluster using CyberDuck.
+ 
+6. Index the genome using hisat2- build
+```
+#################################################################
+# Indexing the Genome
+#################################################################
+module load hisat2/2.2.0
+hisat2-build -p 16 Dmel_scaffold_plus0222.fasta D_melano
+```
+7. Align reads using HISAT2 and sort/read data using samtools. HISAT2 is a splice aware aligner that aligns reads to genes and other expressed transcripts in the genome. Furthermore, HISAT2 confidently maps transcripts containing SNPs.  Shell script is in the align_4 file in the align directory. 
+```
+#################################################################
+# Aligning to Genome
+#################################################################
+module load hisat2/2.2.0
+module load samtools/1.9
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_projec
+t/quality_control/fmaleb_SRR5639587_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639587 - >fmaleb_SRR5639587.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_projec
+t/quality_control/fmaleb_SRR5639588_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639588 - >fmaleb_SRR5639588.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_projec
+t/quality_control/fmaleb_SRR5639589_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639589 - >fmaleb_SRR5639589.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_projec
+t/quality_control/fmalegerm_SRR5639581_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639581 - >fmalegerm_SRR5639581.bam
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_project/quality_control/fmalegerm_SRR5639582_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639582 - >fmalegerm_SRR5639582.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_project/quality_control/fmalegerm_SRR5639583_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639583 - >fmalegerm_SRR5639583.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_project/quality_control/maleb_SRR5639590_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639590 - >maleb_SRR5639590.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_project/quality_control/maleb_SRR5639591_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639591 - >maleb_SRR5639591.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_project/quality_control/maleb_SRR5639592_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639592 - >maleb_SRR5639592.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_project/quality_control/malegerm_SRR5639584_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639584 - >malegerm_SRR5639584.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_project/quality_control/malegerm_SRR5639585_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639585 - >malegerm_SRR5639585.bam
+
+hisat2 -p 8 --dta -x /home/FCAM/EEB5300/usr10/final_project/index/D_melano -U /home/FCAM/EEB5300/usr10/final_project/quality_control/malegerm_SRR5639584_trim.fastq.gz | \
+        samtools view -S -h -u - | \
+        samtools sort -T SRR5639586 - >malegerm_SRR5639586.bam
+
+# index bam files
+samtools index fmaleb_SRR5639587.bam
+samtools index fmaleb_SRR5639588.bam
+samtools index fmaleb_SRR5639589.bam
+samtools index fmalegerm_SRR5639581.bam
+samtools index fmalegerm_SRR5639582.bam
+samtools index fmalegerm_SRR5639583.bam
+samtools index maleb_SRR5639590.bam
+samtools index maleb_SRR5639591.bam
+samtools index maleb_SRR5639592.bam
+samtools index malegerm_SRR5639584.bam
+samtools index malegerm_SRR5639585.bam
+samtools index malegerm_SRR5639586.bam
+```
+
+8. Use Integrative Genomics Viewer browser to determine whether or not centromeric G2/Jockey copies are transcribed in male/female brain & germline
+I) Transferred the RNASeq data set to my local computer using…
+scp -r   eeb5300usr10@transfer.cam.uchc.edu:/home/FCAM/EEB5300?usr10/final_project/align/align_4/Users/TylerMcDermott/Desktop
+	*The “align_4” folder contains the RNASeq data for each tissue (3 female brain, 3 female germline, 3 male brain, 3 male germline)*
+	II) Uploaded our in-lab reference genome and annotation file into Integrative Genomics Viewer (IGV 2.8.0)
+	III)Uploaded the bam files for each RNASeq set into IGV for aligning to our genome. 
+	IV) Aligned the RNAseq files to our in-lab curated genome at centromeric loci to assess for centromeric G2/Jockey transcript presence in these tissues
+
+
+
+Notes for understanding the images:
+*(Y is Y_Contig26, X is Contig79, 4 is Contig119, 3 is 3R_5, 2 is tig00057289)*
+*G2/Jockey sequences are in purple*
+
+![fmale_cenX](https://user-images.githubusercontent.com/80122814/117384325-b50df500-aeb0-11eb-8009-c1ad5575bcc6.png)
+![g2](https://user-images.githubusercontent.com/80122814/117384331-b8a17c00-aeb0-11eb-9796-bf3f68e68352.png)
+![g2_2](https://user-images.githubusercontent.com/80122814/117384338-bb9c6c80-aeb0-11eb-912e-3f38c7b68085.png)
+![g2_3](https://user-images.githubusercontent.com/80122814/117384347-bdfec680-aeb0-11eb-9c25-4314fba37e5f.png)
+![male_cen3](https://user-images.githubusercontent.com/80122814/117384357-c0f9b700-aeb0-11eb-9e0a-1d9dfb59830b.png)
+
+
+
+
+9. Determine which genes are differentially expressed in male/female brains/gonads using DSeq2 in R. Visualize data using a volcano plot and heat map.
+Sample code to generate the DSeq data is shown below:
+```
+setwd("C:/Users/ashle/OneDrive/Desktop/eeb5300/final_project/counts_germ")
+directory <- "C:/Users/ashle/OneDrive/Desktop/eeb5300/final_project/counts_germ"
+list.files(directory)
+sampleFiles <- list.files(directory, pattern = ".*counts")
+library("DESeq2")
+library("apeglm")
+library("pheatmap")
+library("tidyverse")
+samplegender <- c("fmale","fmale","fmale","male","male","male")
+ sampleNames <- c("fmalegerm_1","fmalegerm_2","fmalegerm_3", "malegerm_1","malegerm_2", "malegerm_3")
+sampleTable <- data.frame(sampleName = sampleNames,fileName = sampleFiles,gender = samplegender)
+ddsHTSeq <- DESeqDataSetFromHTSeqCount(
+  sampleTable = sampleTable, 
+  directory = directory, 
+  design = ~ gender )
+ddsHTSeq$gender
+dds <- DESeq(ddsHTSeq)
+resultsNames(dds)
+res <- results(dds)
+summary(res)
+head(res)
+# get shrunken log fold changes
+res_shrink <- lfcShrink(dds,coef="gender_male_vs_fmale")
+# To get MA plot
+top20 <- order(-abs(res_shrink$log2FoldChange))[1:20]
+res_shrink[top20,]
+plotMA(res_shrink, ylim=c(-4,4))
+# To get volcano plot
+# negative log-scaled adjusted p-values
+log_padj <- -log(res_shrink$padj,10)
+log_padj[log_padj > 100] <- 100
+# plot
+plot(x=res_shrink$log2FoldChange,
+     y=log_padj,
+     pch=20,
+     cex=.2,
+     col=(log_padj > 10)+1, # color padj < 0.1 red
+     ylab="negative log-scaled adjusted p-value",
+     xlab="shrunken log2 fold changes")
+# To get heat map
+library("pheatmap")
+top50 <- order(-abs(res_shrink$log2FoldChange))[1:50]
+df <- data.frame(colData(dds)[,"gender"])
+rownames(df) <- colnames(dds)
+colnames(df) <- "gender"
+pheatmap(
+  assay(rld)[top50,], 
+  cluster_rows=TRUE, 
+  show_rownames=TRUE,
+  cluster_cols=FALSE,
+  annotation_col=df
+)
+```
+
+
+
+Discussion: 
+We utilized publicly available RNASeq data sets from Drosophila melanogaster brains and germline tissues to assess for centromeric G2/Jockey transcripts. An annotated, in-lab curated genome for D.mel explicitly identifies centromeric G2/Jockey sequences at a capacity otherwise not reached in publicly available genomes. The 5 centromere contig identities are noted above, and were isolated in IGV for alignment. (Note: not all centromeres are images are shown here) Centromeric G2/Jockey, the purple segments within the annotation images, aligned to several transcripts in the tissues we analyzed. Almost all of the transcripts were less than 100bp long, which is peculiar being that G2/Jockey is ~4.3kb. These sequences were similar across the different tissues which suggests further investigation into the source, and role, of these particular sequences. A leading theory we are proposing is that these transcript sequences may be sourced from piRNA clusters responsible for silencing transposons, such as G2/Jockey. piRNAs are small RNA segments that maintain sequence complementarity to that of the element they target for degradation and silencing. Therefore, an active piRNA cluster responsible for silencing G2/Jockey could produce sequences identical to that of G2/Jockey. This is further supported by the fact that these alignments are small, like that of a piRNA cluster, and not nearly long enough to have been sourced from an actual G2/Jockey element. However, further research would be needed to assess whether or not piRNA clusters could contribute the sequences we are observing. Our lab has annotation files for piRNA clusters that frequent G2/Jockey sequence complementarity (i.e. cluster38C1) which could be used for further analysis. 
+We also analyzed some differentially expressed genes as defined by Dseq2. As you can see from the heatmaps above, a plethora of differentially expressed genes are identified. This comes as no surprise being that we were comparing male & female germlines tissues. Testes and ovaries obviously maintain different structural and functional identities. A few genes caught our eye due to their levels of differential expression. Once translating the MSTRG files into FBgn (flybase), we were able to identify the role of those genes in a fruit fly. For example, MSTRG.13321 (FBgn0267366) codes for a nucleosome factor associated with spermatogenesis. This makes sense being that we found it overly expressed in males, and under expressed in females. We elucidated on all of these genes in our presentation, and ultimately concluded that there are a large variety of genes differentiating male and female germline tissues. This conclusion even held up in the brain, a somatic tissues. MSTRG.11518 (FBgn0038236) was shown to be overexpressed in male brains, as compared to females, and codes for a metabolic factor involved in hormonal pathways and insecticide digestion. Additional research could elucidate the role of these genes in fruit fly, as well as potentially explain why they are influenced by sex determination.
+
+
+
+References
+
+Reference: Yang, Haiwang et al. “Re-annotation of eight Drosophila genomes.” Life science alliance vol. 1,6 e201800156. 24 Dec. 2018, doi:10.26508/lsa.201800156
+
+Chang, C. H. et al. Islands of retroelements are major components of Drosophila centromeres. PLoS Biol. 17, (2019).
